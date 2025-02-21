@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>聊天页面</title>
+  <style>
+    /* 设置整个页面的样式 */
+    body {
+      font-family: Arial, sans-serif; /* 设置默认字体 */
+      background: linear-gradient(135deg, #74ebd5, #acb6e5); /* 渐变背景 */
+      display: flex;
+      justify-content: center; /* 居中显示聊天框 */
+      align-items: center;
+      height: 100vh; /* 让整个页面充满屏幕 */
+      margin: 0;
+    }
+
+    /* 聊天窗口的样式 */
+    #chat-box {
+      width: 500px; /* 设置聊天框宽度 */
+      height: 600px; /* 设置聊天框高度 */
+      background: white; /* 白色背景 */
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
+      border-radius: 10px; /* 圆角边框 */
+      display: flex;
+      flex-direction: column; /* 子元素垂直排列 */
+      overflow: hidden; /* 防止内容溢出 */
+    }
+
+    /* 头部标题样式 */
+    #chat-header {
+      background: #007bff; /* 蓝色背景 */
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    /* 消息显示区域样式 */
+    #messages {
+      flex: 1; /* 占据剩余空间 */
+      padding: 15px;
+      overflow-y: auto; /* 超出时出现滚动条 */
+      display: flex;
+      flex-direction: column; /* 消息按顺序排列 */
+    }
+
+    /* 消息通用样式 */
+    .message {
+      max-width: 70%; /* 限制最大宽度 */
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      word-wrap: break-word; /* 让长文本换行 */
+    }
+
+    /* 用户消息样式（靠右，蓝色） */
+    .user {
+      align-self: flex-end;
+      background: #007bff;
+      color: white;
+    }
+
+    /* 服务器消息样式（靠左，灰色） */
+    .server {
+      align-self: flex-start;
+      background: #f1f1f1;
+      color: black;
+    }
+
+    /* 输入区域样式 */
+    #input-area {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #ddd;
+      background: white;
+    }
+
+    /* 输入框样式 */
+    #user-input {
+      flex: 1; /* 让输入框占满剩余空间 */
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    /* 发送按钮样式 */
+    #send-btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      margin-left: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    /* 发送按钮悬停样式 */
+    #send-btn:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 聊天界面 -->
+  <div id="chat-box">
+    <!-- 聊天标题 -->
+    <div id="chat-header">DeepSeek-R100</div>
+    
+    <!-- 消息显示区域 -->
+    <div id="messages"></div>
+
+    <!-- 输入区域 -->
+    <div id="input-area">
+      <input type="text" id="user-input" placeholder="请输入消息..." />
+      <button id="send-btn">发送</button>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * 发送消息的函数
+     * 作用：读取用户输入，显示消息，并在 5-20 秒后回复固定消息
+     */
+    function sendMessage() {
+      var inputField = document.getElementById('user-input'); // 获取输入框
+      var message = inputField.value.trim(); // 去除前后空格
+      if (!message) return; // 如果输入为空，则不发送消息
+
+      var messagesDiv = document.getElementById('messages'); // 获取消息显示区域
+
+      // 创建用户消息气泡
+      var userMsg = document.createElement('div');
+      userMsg.className = 'message user'; // 添加用户消息的样式
+      userMsg.textContent = message;
+      messagesDiv.appendChild(userMsg); // 添加到消息显示区域
+
+      inputField.value = ''; // 清空输入框
+
+      messagesDiv.scrollTop = messagesDiv.scrollHeight; // 滚动到底部
+
+      // 服务器延时 5-20 秒后回复
+      var delay = Math.floor(Math.random() * (20000 - 5000 + 1)) + 5000; // 生成 5-20 秒的随机延迟
+
+      setTimeout(function() {
+        var serverMsg = document.createElement('div');
+        serverMsg.className = 'message server'; // 添加服务器消息的样式
+        serverMsg.textContent = '服务器繁忙，请稍后再试。'; // 服务器的固定回复
+        messagesDiv.appendChild(serverMsg);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight; // 滚动到底部
+      }, delay);
+    }
+
+    // 点击按钮发送消息
+    document.getElementById('send-btn').addEventListener('click', sendMessage);
+
+    // 监听输入框的键盘事件，按下 "Enter" 键时发送消息
+    document.getElementById('user-input').addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') { // 确保是回车键
+        sendMessage();
+      }
+    });
+  </script>
+
+</body>
+</html>
